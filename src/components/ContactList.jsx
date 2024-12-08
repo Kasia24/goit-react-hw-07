@@ -7,18 +7,23 @@ const ContactList = () => {
   const filter = useSelector((state) => state.filters.name);
   const dispatch = useDispatch();
 
-  const filteredContacts = items.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const filteredContacts = React.useMemo(() => {
+    return items.filter((contact) =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }, [items, filter]);
 
-  if (loading) return <p>Loading contacts...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p>Loading contacts, please wait...</p>;
+  if (error) return <p>Something went wrong: {error}</p>;
+  if (filteredContacts.length === 0 && !loading && !error) {
+    return <p>No contacts found matching the filter.</p>;
+  }
 
   return (
     <ul>
       {filteredContacts.map(({ id, name, number }) => (
         <li key={id}>
-          {name}: {number}
+          {name}: {number}{" "}
           <button onClick={() => dispatch(deleteContact(id))}>Delete</button>
         </li>
       ))}
