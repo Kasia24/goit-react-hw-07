@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Używamy domyślnego localStorage
 import { combineReducers } from "redux";
-import contactsReducer from "./contactsSlice"; // Zastąp swoją ścieżką
+import contactsReducer from "./contactsSlice";
 
 // Konfiguracja persist
 const persistConfig = {

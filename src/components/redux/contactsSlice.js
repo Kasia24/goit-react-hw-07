@@ -3,14 +3,16 @@ import axios from "axios";
 
 const BASE_URL = "https://6754b4ae36bcd1eec851cd4e.mockapi.io/contacts";
 
-// Operacja: Pobieranie kontaktów
 export const fetchContacts = createAsyncThunk(
   "contacts/fetchAll",
   async (_, thunkAPI) => {
     try {
+      console.log("Fetching contacts from:", BASE_URL); // Debug URL
       const response = await axios.get(`${BASE_URL}`);
-      return response.data; // Zwracamy dane do reduktora
+      console.log("Response:", response.data); // Debug odpowiedź
+      return response.data;
     } catch (error) {
+      console.error("Error fetching contacts:", error); // Debug błędy
       return thunkAPI.rejectWithValue(error.message);
     }
   }
