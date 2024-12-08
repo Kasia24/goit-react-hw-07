@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNameFilter } from "./redux/filtersSlice";
 
 const SearchBox = () => {
-  const filter = useSelector((state) => state.filters.name);
+  const filter = useSelector((state) => state.filters?.name || "");
   const dispatch = useDispatch();
   const [localFilter, setLocalFilter] = useState(filter);
   const debounceTimeout = useRef(null); // Użycie useRef dla debounce timeout

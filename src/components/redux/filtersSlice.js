@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  name: "", // Zainicjowanie 'name' na pusty string
+};
+
 const filtersSlice = createSlice({
   name: "filters",
   initialState: {
