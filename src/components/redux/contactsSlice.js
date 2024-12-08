@@ -3,41 +3,39 @@ import axios from "axios";
 
 const BASE_URL = "https://6754b4ae36bcd1eec851cd4e.mockapi.io/contacts";
 
+// Operacja: Pobieranie kontaktów (GET)
 export const fetchContacts = createAsyncThunk(
   "contacts/fetchAll",
   async (_, thunkAPI) => {
     try {
-      console.log("Fetching contacts from:", BASE_URL); // Debug URL
-      const response = await axios.get(`${BASE_URL}`);
-      console.log("Response:", response.data); // Debug odpowiedź
+      const response = await axios.get(BASE_URL);
       return response.data;
     } catch (error) {
-      console.error("Error fetching contacts:", error); // Debug błędy
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-// Operacja: Dodawanie kontaktu
+// Operacja: Dodawanie kontaktu (POST)
 export const addContact = createAsyncThunk(
   "contacts/addContact",
   async (newContact, thunkAPI) => {
     try {
-      const response = await axios.post(`${BASE_URL}`, newContact);
-      return response.data; // Zwracamy dodany kontakt
+      const response = await axios.post(BASE_URL, newContact);
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-// Operacja: Usuwanie kontaktu
+// Operacja: Usuwanie kontaktu (DELETE)
 export const deleteContact = createAsyncThunk(
   "contacts/deleteContact",
   async (contactId, thunkAPI) => {
     try {
       await axios.delete(`${BASE_URL}/${contactId}`);
-      return contactId; // Zwracamy ID usuniętego kontaktu
+      return contactId;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -53,6 +51,7 @@ const initialState = {
 const contactsSlice = createSlice({
   name: "contacts",
   initialState,
+  reducers: {},
   extraReducers: (builder) => {
     // Pobieranie kontaktów
     builder
