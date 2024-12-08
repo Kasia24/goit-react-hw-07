@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./components/redux/store";
+import { store, persistor } from "./redux/store";
 import { useDispatch } from "react-redux";
-import { fetchContacts } from "./components/redux/contactsSlice";
-import ContactForm from "./components/ContactForm";
-import SearchBox from "./components/SearchBox";
-import ContactList from "./components/ContactList";
+import { fetchContacts } from "./redux/contactsSlice";
+import ContactForm from "./ContactForm";
+import SearchBox from "./SearchBox";
+import ContactList from "./ContactList";
 
 const FetchContacts = () => {
   const dispatch = useDispatch();
