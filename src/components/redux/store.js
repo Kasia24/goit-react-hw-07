@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./slices/counterSlice"; // Przyklad z licznikem
+import counterReducer from "../redux/contactsSlice"; // Przyklad z licznikem
 
 export const store = configureStore({
   reducer: {
