@@ -8,22 +8,24 @@ const ContactForm = () => {
 
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Stan błędów
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage(""); // Resetowanie błędu przy każdym wysłaniu formularza
 
     // Sprawdzenie, czy kontakt już istnieje (bez uwzględniania wielkości liter)
     if (
       items.some((contact) => contact.name.toLowerCase() === name.toLowerCase())
     ) {
-      alert(`${name} is already in contacts.`);
+      setErrorMessage(`${name} is already in contacts.`);
       return;
     }
 
     // Walidacja numeru telefonu
     const phoneNumberRegex = /^[0-9\s\-+()]+$/;
     if (!phoneNumberRegex.test(number)) {
-      alert("Please enter a valid phone number.");
+      setErrorMessage("Please enter a valid phone number.");
       return;
     }
 
@@ -34,31 +36,39 @@ const ContactForm = () => {
         setName("");
         setNumber("");
       })
-      .catch(() => {
-        alert("Failed to add contact. Please try again.");
+      .catch((err) => {
+        setErrorMessage("Failed to add contact. Please try again.");
+        console.error("Add contact error: ", err); // Debugging
       });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <input
-        type="text"
-        placeholder="Number"
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-        required
-      />
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Number"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          required
+        />
+      </div>
       <button type="submit" disabled={loading || !name || !number}>
         {loading ? "Adding..." : "Add Contact"}
       </button>
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+
+      {errorMessage && (
+        <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
+      )}
     </form>
   );
 };
