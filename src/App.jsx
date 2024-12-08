@@ -20,7 +20,11 @@ const FetchContacts = () => {
 const App = () => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate
+        loading={null}
+        persistor={persistor}
+        onBeforeLift={() => store.dispatch(fetchContacts())}
+      >
         <div>
           <h1>Phonebook</h1>
           <FetchContacts />
