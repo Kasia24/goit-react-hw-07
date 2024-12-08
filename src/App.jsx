@@ -8,18 +8,22 @@ import ContactForm from "./components/ContactForm";
 import SearchBox from "./components/SearchBox";
 import ContactList from "./components/ContactList";
 
-const App = () => {
+const FetchContacts = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchContacts()); // Pobierz kontakty z backendu
+    dispatch(fetchContacts());
   }, [dispatch]);
 
+  return null; // Ten komponent nie renderuje niczego wizualnego
+};
+const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <div>
           <h1>Phonebook</h1>
+          <FetchContacts />
           <ContactForm />
           <SearchBox />
           <ContactList />
