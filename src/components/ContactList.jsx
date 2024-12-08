@@ -8,8 +8,17 @@ const ContactList = () => {
   const dispatch = useDispatch();
 
   const filteredContacts = React.useMemo(() => {
-    return items.filter((contact) =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
+    // Sprawdzamy, czy 'items' jest tablicą i nie jest pusta
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    // Filtrowanie kontaktów
+    return items.filter(
+      (contact) =>
+        contact &&
+        contact.name &&
+        contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   }, [items, filter]);
 
@@ -23,7 +32,7 @@ const ContactList = () => {
     <ul>
       {filteredContacts.map(({ id, name, number }) => (
         <li key={id}>
-          {name}: {number}{" "}
+          {name || "Unnamed"}: {number || "No number provided"}{" "}
           <button onClick={() => dispatch(deleteContact(id))}>Delete</button>
         </li>
       ))}
