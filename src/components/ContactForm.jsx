@@ -4,20 +4,39 @@ import { addContact } from "./redux/contactsSlice";
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const { items, loading } = useSelector((state) => state.contacts);
+  const { items, loading, error } = useSelector((state) => state.contacts);
 
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (items.some((contact) => contact.name === name)) {
+
+    // Sprawdzenie, czy kontakt już istnieje (bez uwzględniania wielkości liter)
+    if (
+      items.some((contact) => contact.name.toLowerCase() === name.toLowerCase())
+    ) {
       alert(`${name} is already in contacts.`);
       return;
     }
-    dispatch(addContact({ name, number }));
-    setName("");
-    setNumber("");
+
+    // Walidacja numeru telefonu
+    const phoneNumberRegex = /^[0-9\s\-+()]+$/;
+    if (!phoneNumberRegex.test(number)) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
+
+    // Dodanie kontaktu
+    dispatch(addContact({ name, number }))
+      .unwrap() // Obsługuje ewentualne błędy (redux-thunk)
+      .then(() => {
+        setName("");
+        setNumber("");
+      })
+      .catch(() => {
+        alert("Failed to add contact. Please try again.");
+      });
   };
 
   return (
@@ -36,9 +55,10 @@ const ContactForm = () => {
         onChange={(e) => setNumber(e.target.value)}
         required
       />
-      <button type="submit" disabled={loading}>
+      <button type="submit" disabled={loading || !name || !number}>
         {loading ? "Adding..." : "Add Contact"}
       </button>
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
     </form>
   );
 };
