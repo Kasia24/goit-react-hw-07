@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter } from "./redux/filtersSlice";
+import { setNameFilter } from "./redux/filtersSlice";
 
 let debounceTimeout; // Zmienna do obsługi debounce
 
@@ -15,13 +15,13 @@ const SearchBox = () => {
 
     clearTimeout(debounceTimeout); // Czyszczenie poprzedniego timeoutu
     debounceTimeout = setTimeout(() => {
-      dispatch(setFilter(value)); // Aktualizacja Redux po opóźnieniu
+      dispatch(setNameFilter(value)); // Aktualizacja Redux po opóźnieniu
     }, 300); // 300 ms debounce
   };
 
   const clearFilter = () => {
     setLocalFilter(""); // Czyszczenie lokalnej wartości
-    dispatch(setFilter("")); // Czyszczenie filtra w Redux
+    dispatch(setNameFilter("")); // Czyszczenie filtra w Redux
   };
 
   return (
