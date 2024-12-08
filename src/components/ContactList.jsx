@@ -1,30 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteContact } from "./redux/contactsSlice";
+import { fetchContacts, deleteContact } from "./redux/contactsSlice";
 
 const ContactList = () => {
   const { items, loading, error } = useSelector((state) => state.contacts);
   const filter = useSelector((state) => state.filters.name);
   const dispatch = useDispatch();
 
-  const filteredContacts = React.useMemo(() => {
-    // Sprawdzamy, czy 'items' jest tablicą i nie jest pusta
-    if (!Array.isArray(items)) {
-      return [];
-    }
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-    // Filtrowanie kontaktów
-    return items.filter(
-      (contact) =>
-        contact &&
-        contact.name &&
-        contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }, [items, filter]);
+  const filteredContacts = items.filter((contact) =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
-  if (loading) return <p>Loading contacts, please wait...</p>;
-  if (error) return <p>Something went wrong: {error}</p>;
-  if (filteredContacts.length === 0 && !loading && !error) {
+  if (loading) return <p>Loading contacts...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (filteredContacts.length === 0) {
     return <p>No contacts found matching the filter.</p>;
   }
 
@@ -32,7 +25,7 @@ const ContactList = () => {
     <ul>
       {filteredContacts.map(({ id, name, number }) => (
         <li key={id}>
-          {name || "Unnamed"}: {number || "No number provided"}{" "}
+          {name}: {number}{" "}
           <button onClick={() => dispatch(deleteContact(id))}>Delete</button>
         </li>
       ))}
