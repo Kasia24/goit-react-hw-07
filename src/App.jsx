@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store } from "./components/redux/store";
+import { store, persistor } from "./components/redux/store";
 import { useDispatch } from "react-redux";
 import { fetchContacts } from "./components/redux/contactsSlice";
 import ContactForm from "./components/ContactForm";
@@ -17,12 +17,14 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm />
-        <SearchBox />
-        <ContactList />
-      </div>
+      <PersistGate loading={null} persistor={persistor}>
+        <div>
+          <h1>Phonebook</h1>
+          <ContactForm />
+          <SearchBox />
+          <ContactList />
+        </div>
+      </PersistGate>
     </Provider>
   );
 };
