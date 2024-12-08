@@ -7,6 +7,7 @@ import { fetchContacts } from "./components/redux/contactsSlice";
 import ContactForm from "./components/ContactForm";
 import SearchBox from "./components/SearchBox";
 import ContactList from "./components/ContactList";
+import { resetState } from "./components/redux/contactsSlice";
 
 const FetchContacts = () => {
   const dispatch = useDispatch();
@@ -23,11 +24,13 @@ const App = () => {
       <PersistGate
         loading={null}
         persistor={persistor}
-        onBeforeLift={() => store.dispatch(fetchContacts())}
+        onBeforeLift={() => {
+          store.dispatch(resetState()); // Resetuj stan, jeśli to konieczne
+          store.dispatch(fetchContacts());
+        }}
       >
         <div>
           <h1>Phonebook</h1>
-          <FetchContacts />
           <ContactForm />
           <SearchBox />
           <ContactList />
