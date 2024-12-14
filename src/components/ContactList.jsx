@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchContacts, removeContact } from "./redux/contactsSlice"; // Zaimportuj removeContact
+import { fetchContacts, removeContact } from "./redux/contactsSlice";
 
 const ContactList = () => {
   // Zmieniamy 'items' na 'contacts' (zgodnie z definicją w reducerze)
@@ -15,10 +15,12 @@ const ContactList = () => {
     }
   }, [dispatch, status]);
 
-  // Filtrujemy kontakty według wprowadzonego filtra
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  // Sprawdzamy, czy contacts jest tablicą przed filtrowaniem
+  const filteredContacts = Array.isArray(contacts)
+    ? contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(filter.toLowerCase())
+      )
+    : [];
 
   if (status === "loading") return <p>Loading contacts...</p>;
   if (error) return <p>Error: {error}</p>;
