@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Domyślny storage w localStorage
-import rootReducer from "./reducers"; // Główny reducer
+import rootReducer from "./rootReducer"; // Główny reducer
 
 const persistConfig = {
   key: "root",
