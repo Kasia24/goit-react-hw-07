@@ -1,22 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react"; // Jeśli używasz redux-persist
-import { store, persistor } from "./redux/store"; // Upewnij się, że eksportujesz i importujesz oba
-import { useDispatch } from "react-redux";
-import { fetchContacts } from "./redux/contactsSlice"; // Akcja do pobierania kontaktów
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./redux/store";
+import FetchContacts from "./FetchContacts"; // Importuj komponent do pobierania kontaktów
 import ContactForm from "./ContactForm";
 import SearchBox from "./SearchBox";
 import ContactList from "./ContactList";
-
-const FetchContacts = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
-  return null; // Ten komponent nie renderuje niczego wizualnego
-};
 
 const App = () => {
   return (
@@ -24,7 +13,8 @@ const App = () => {
       <PersistGate loading={null} persistor={persistor}>
         <div>
           <h1>Phonebook</h1>
-          <FetchContacts /> {/* Tylko jeden mechanizm pobierania danych */}
+          <FetchContacts />{" "}
+          {/* Komponent odpowiedzialny za pobieranie danych */}
           <ContactForm />
           <SearchBox />
           <ContactList />

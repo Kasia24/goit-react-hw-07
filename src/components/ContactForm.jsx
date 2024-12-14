@@ -48,7 +48,7 @@ const ContactForm = () => {
         required
       />
       <button type="submit" disabled={loading || !name || !number}>
-        {loading ? "Adding..." : "Add Contact"}
+        {loading ? "Adding..." : "addContact"}
       </button>
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
     </form>
