@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addContact } from "./redux/contactsSlice";
+import { fetchContacts } from "./redux/contactsSlice";
 
 const ContactForm = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const ContactForm = () => {
     }
 
     // Dodanie kontaktu
-    dispatch(addContact({ name, number }))
+    dispatch(fetchContacts({ name, number }))
       .unwrap()
       .then(() => {
         setName("");
