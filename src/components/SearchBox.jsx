@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNameFilter } from "./redux/filtersSlice";
+import { setFilter } from "./redux/filtersSlice";
 
 const SearchBox = () => {
   const filter = useSelector((state) => state.filters?.name || "");
@@ -17,13 +17,13 @@ const SearchBox = () => {
 
     // Ustawienie nowego timeoutu
     debounceTimeout.current = setTimeout(() => {
-      dispatch(setNameFilter(value)); // Aktualizacja Redux po opóźnieniu
+      dispatch(setFilter(value)); // Aktualizacja Redux po opóźnieniu
     }, 300); // 300 ms debounce
   };
 
   const clearFilter = () => {
     setLocalFilter(""); // Czyszczenie lokalnej wartości
-    dispatch(setNameFilter("")); // Czyszczenie filtra w Redux
+    dispatch(setFilter("")); // Czyszczenie filtra w Redux
   };
 
   // Czyszczenie timeoutu przy odmontowywaniu komponentu
