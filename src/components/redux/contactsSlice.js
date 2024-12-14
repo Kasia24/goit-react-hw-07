@@ -3,16 +3,19 @@ import axios from "axios";
 
 const BASE_URL = "https://connections-api.goit.global";
 
-export const addContact = createAsyncThunk("contacts/addContact", async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/contacts`);
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      error.response ? error.response.data.message : error.message
-    );
+export const fetchContacts = createAsyncThunk(
+  "contacts/fetchContacts",
+  async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/contacts`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response ? error.response.data.message : error.message
+      );
+    }
   }
-});
+);
 
 const contactsSlice = createSlice({
   name: "contacts",
@@ -24,14 +27,14 @@ const contactsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(addContact.pending, (state) => {
+      .addCase(fetchContacts.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addContact.fulfilled, (state, action) => {
+      .addCase(fetchContacts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.contacts = action.payload;
       })
-      .addCase(addContact.rejected, (state, action) => {
+      .addCase(fetchContacts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
