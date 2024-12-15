@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "https://connections-api.goit.global";
+const BASE_URL = "https://connections-api.goit.global/docs/#/";
 
 // Akcja do pobierania kontaktów
 export const fetchContacts = createAsyncThunk(
