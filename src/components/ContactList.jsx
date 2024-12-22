@@ -1,32 +1,32 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchContacts, removeContact } from "./redux/contactsSlice";
+import { fetchContacts } from "./redux/contactsSlice";
 
 const ContactList = () => {
-  // Zmieniamy 'items' na 'contacts' (zgodnie z definicją w reducerze)
-  const { contacts, status, error } = useSelector((state) => state.contacts); // 'contacts' zamiast 'items'
-  const filter = useSelector((state) => state.filters.name);
+  const {
+    items: contacts,
+    loading,
+    error,
+  } = useSelector((state) => state.contacts);
+  const filter = useSelector((state) => state.filters?.name || ""); // Domyślny filtr jako pusty ciąg
   const dispatch = useDispatch();
 
-  // Pobieramy dane tylko, jeśli nie zostały jeszcze załadowane
   useEffect(() => {
-    if (status === "idle") {
+    if (!contacts.length) {
       dispatch(fetchContacts());
     }
-  }, [dispatch, status]);
+  }, [dispatch, contacts.length]);
 
-  // Sprawdzamy, czy contacts jest tablicą przed filtrowaniem
-  const filteredContacts = Array.isArray(contacts)
-    ? contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(filter.toLowerCase())
-      )
-    : [];
+  // Filtrujemy kontakty
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
-  if (status === "loading") return <p>Loading contacts...</p>;
+  // Wyświetlamy odpowiednie komunikaty
+  if (loading) return <p>Loading contacts...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (filteredContacts.length === 0) {
+  if (!filteredContacts.length)
     return <p>No contacts found matching the filter.</p>;
-  }
 
   return (
     <ul>
