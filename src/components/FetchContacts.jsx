@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchContacts } from "./redux/contactsSlice"; // Akcja do pobierania kontaktów
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const FetchContacts = () => {
-  const dispatch = useDispatch();
+// Ustawienie podstawowego URL do API
+axios.defaults.baseURL = "https://connections-api.goit.global/";
 
-  useEffect(() => {
-    dispatch(fetchContacts()); // Wysyłanie akcji do pobierania danych
-  }, [dispatch]);
-
-  return null; // Ten komponent nie renderuje niczego wizualnego
-};
-
-export default FetchContacts;
+export const fetchContacts = createAsyncThunk(
+  "contacts/fetchAll", // Typ akcji
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/contacts");
+      return response.data; // Zwraca dane
+    } catch (error) {
+      return rejectWithValue(error.response.data.message); // Zwraca błąd
+    }
+  }
+);
