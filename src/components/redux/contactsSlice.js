@@ -1,74 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {
-  fetchContacts,
-  addContact,
-  deleteContact,
-} from "../contactsOperations";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initialState = {
-  contacts: {
+axios.defaults.baseURL = "https://connections-api.goit.global/";
+
+export const fetchContacts = createAsyncThunk(
+  "contacts/fetchAll",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get("/contacts");
+      return response.data; // Zwracamy kontakty w danych odpowiedzi
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message); // Obsługuje błąd
+    }
+  }
+);
+
+const contactsSlice = createSlice({
+  name: "contacts",
+  initialState: {
     items: [],
     loading: false,
     error: null,
   },
-  filters: {
-    name: "",
-  },
-};
-
-const contactsSlice = createSlice({
-  name: "contacts",
-  initialState,
-  reducers: {
-    setFilter(state, action) {
-      state.filters.name = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    // Obsługuje fetchContacts
     builder
       .addCase(fetchContacts.pending, (state) => {
-        state.contacts.loading = true;
-        state.contacts.error = null;
+        state.loading = true;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        state.contacts.items = action.payload;
-        state.contacts.loading = false;
+        state.loading = false;
+        state.items = action.payload; // Zapisujemy dane kontaktów
       })
       .addCase(fetchContacts.rejected, (state, action) => {
-        state.contacts.loading = false;
-        state.contacts.error = action.payload;
-      })
-      // Obsługuje addContact
-      .addCase(addContact.pending, (state) => {
-        state.contacts.loading = true;
-        state.contacts.error = null;
-      })
-      .addCase(addContact.fulfilled, (state, action) => {
-        state.contacts.items.push(action.payload); // Dodaj nowy kontakt do listy
-        state.contacts.loading = false;
-      })
-      .addCase(addContact.rejected, (state, action) => {
-        state.contacts.loading = false;
-        state.contacts.error = action.payload;
-      })
-      // Obsługuje deleteContact
-      .addCase(deleteContact.pending, (state) => {
-        state.contacts.loading = true;
-        state.contacts.error = null;
-      })
-      .addCase(deleteContact.fulfilled, (state, action) => {
-        state.contacts.items = state.contacts.items.filter(
-          (contact) => contact.id !== action.payload
-        ); // Usunięcie kontaktu z listy
-        state.contacts.loading = false;
-      })
-      .addCase(deleteContact.rejected, (state, action) => {
-        state.contacts.loading = false;
-        state.contacts.error = action.payload;
+        state.loading = false;
+        state.error = action.payload; // Zapisujemy błąd
       });
   },
 });
 
-export const { setFilter } = contactsSlice.actions;
+export const selectContacts = (state) => state.contacts.items;
+export const selectLoading = (state) => state.contacts.loading;
+export const selectError = (state) => state.contacts.error;
+
 export default contactsSlice.reducer;

@@ -1,42 +1,46 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchContacts } from "./redux/contactsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchContacts } from "./contactsOperations"; // Używamy fetchContacts do pobierania danych
+import {
+  selectContacts,
+  selectLoading,
+  selectError,
+} from "./redux/contactsSlice"; // Używamy selektorów
 
 const ContactList = () => {
-  const {
-    items: contacts,
-    loading,
-    error,
-  } = useSelector((state) => state.contacts);
-  const filter = useSelector((state) => state.filters?.name || ""); // Domyślny filtr jako pusty ciąg
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts); // Pobieramy kontakty z Redux
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
-    if (!contacts.length) {
-      dispatch(fetchContacts());
-    }
-  }, [dispatch, contacts.length]);
+    dispatch(fetchContacts()); // Wysyłamy akcję do pobrania kontaktów
+  }, [dispatch]);
 
-  // Filtrujemy kontakty
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  // Wyświetlamy odpowiednie komunikaty
-  if (loading) return <p>Loading contacts...</p>;
+  // Obsługa stanu ładowania i błędów
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!filteredContacts.length)
-    return <p>No contacts found matching the filter.</p>;
+
+  // Walidacja: Sprawdzamy, czy contacts to tablica
+  if (!Array.isArray(contacts)) {
+    return <p>Invalid data format.</p>;
+  }
 
   return (
-    <ul>
-      {filteredContacts.map(({ id, name, number }) => (
-        <li key={id}>
-          {name}: {number}{" "}
-          <button onClick={() => dispatch(removeContact(id))}>Delete</button>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h2>Contact List</h2>
+      <ul>
+        {contacts.length > 0 ? (
+          contacts.map((contact) => (
+            <li key={contact.id}>
+              {contact.name}: {contact.phone}
+            </li>
+          ))
+        ) : (
+          <p>No contacts found.</p>
+        )}
+      </ul>
+    </div>
   );
 };
 

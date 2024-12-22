@@ -1,56 +1,29 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchContacts } from "./redux/contactsSlice";
+import { useDispatch } from "react-redux";
+import { fetchContacts } from ".//contactsOperations"; // Upewnij się, że importujesz z contactsOperations
 
 const ContactForm = () => {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.contacts);
-
   const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Walidacja numeru telefonu
-    const phoneNumberRegex = /^[0-9\s\-+()]+$/;
-    if (!phoneNumberRegex.test(number)) {
-      alert("Please enter a valid phone number.");
-      return;
-    }
-
-    // Dodanie kontaktu
-    dispatch(fetchContacts({ name, number }))
-      .unwrap()
-      .then(() => {
-        setName("");
-        setNumber("");
-      })
-      .catch(() => {
-        alert("Failed to add contact. Please try again.");
-      });
+    // Jeśli chcesz wysłać dane, np. dodanie kontaktu, to musisz użyć odpowiedniej akcji
+    // Przykład dla dodania kontaktu:
+    // dispatch(addContact({ name }));
+    // Lub, jeśli chcesz pobrać wszystkie kontakty:
+    dispatch(fetchContacts());
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        required
+        placeholder="Add a contact"
       />
-      <input
-        type="text"
-        placeholder="Number"
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-        required
-      />
-      <button type="submit" disabled={loading || !name || !number}>
-        {loading ? "Adding..." : "addContact"}
-      </button>
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      <button type="submit">Add</button>
     </form>
   );
 };
