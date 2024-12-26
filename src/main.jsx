@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx"; // Import głównego komponentu aplikacji
 import { BrowserRouter } from "react-router-dom"; // Importowanie React Router
-import { ToastContainer } from "react-hot-toast"; // Importowanie komponentu Toast do powiadomień
+import { Toaster } from "react-hot-toast";
+// Importowanie komponentu Toast do powiadomień
 import { CssBaseline, ThemeProvider } from "@mui/material"; // Dla Material UI
 import { createTheme } from "@mui/material/styles"; // Tworzenie niestandardowego motywu
 
@@ -31,7 +32,7 @@ root.render(
       <CssBaseline />{" "}
       {/* Resetowanie stylów, aby aplikacja miała spójną bazę */}
       <App /> {/* Główny komponent aplikacji */}
-      <ToastContainer /> {/* Komponent do wyświetlania powiadomień */}
+      <Toaster /> {/* Komponent do wyświetlania powiadomień */}
     </ThemeProvider>
   </BrowserRouter>
 );
