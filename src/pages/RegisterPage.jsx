@@ -1,6 +1,7 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
+// Definicja schematu walidacji
 const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),
   password: Yup.string()
@@ -11,29 +12,60 @@ const validationSchema = Yup.object({
 const RegisterPage = () => {
   const handleSubmit = (values) => {
     // Logika rejestracji
-    console.log(values);
+    console.log("Form submitted with values: ", values);
+    // Możesz dodać wywołanie API lub inną logikę
   };
 
   return (
-    <Formik
-      initialValues={{ username: "", password: "" }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      <Form>
-        <div>
-          <label htmlFor="username">Username</label>
-          <Field id="username" name="username" />
-          <ErrorMessage name="username" component="div" />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <Field type="password" id="password" name="password" />
-          <ErrorMessage name="password" component="div" />
-        </div>
-        <button type="submit">Register</button>
-      </Form>
-    </Formik>
+    <div className="register-container">
+      <h2>Register</h2>
+      <Formik
+        initialValues={{ username: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form className="form">
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <Field
+                id="username"
+                name="username"
+                className="input"
+                placeholder="Enter your username"
+              />
+              <ErrorMessage
+                name="username"
+                component="div"
+                className="error-message"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <Field
+                type="password"
+                id="password"
+                name="password"
+                className="input"
+                placeholder="Enter your password"
+              />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="error-message"
+              />
+            </div>
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isSubmitting} // Wyłączenie przycisku podczas przesyłania
+            >
+              Register
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 
