@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx"; // Import głównego komponentu aplikacji
 import { BrowserRouter } from "react-router-dom"; // Importowanie React Router
-import { ToastContainer } from "react-hot-toast"; // Importowanie komponentu Toast do powiadomień
+import ToastContainer from "react-hot-toast"; // Importowanie komponentu Toast do powiadomień
 import { CssBaseline, ThemeProvider } from "@mui/material"; // Dla Material UI
 import { createTheme } from "@mui/material/styles"; // Tworzenie niestandardowego motywu
 
