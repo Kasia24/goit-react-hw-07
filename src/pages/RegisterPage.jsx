@@ -11,9 +11,10 @@ const validationSchema = Yup.object({
 
 const RegisterPage = () => {
   const handleSubmit = (values) => {
-    // Logika rejestracji
     console.log("Form submitted with values: ", values);
-    // Możesz dodać wywołanie API lub inną logikę
+    // Możesz tu wysłać dane do API rejestracji
+    // Na przykład:
+    // fetch('/api/register', { method: 'POST', body: JSON.stringify(values) });
   };
 
   return (
@@ -58,7 +59,7 @@ const RegisterPage = () => {
             <button
               type="submit"
               className="submit-button"
-              disabled={isSubmitting} // Wyłączenie przycisku podczas przesyłania
+              disabled={isSubmitting} // Wyłączenie przycisku podczas wysyłania formularza
             >
               Register
             </button>
