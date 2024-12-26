@@ -4,7 +4,7 @@ import {
   addContact,
   deleteContact,
   updateContact,
-} from "../api/contacts";
+} from "../components/contacts";
 import toast from "react-hot-toast"; // React Hot Toast dla powiadomień
 
 const TasksPage = () => {
