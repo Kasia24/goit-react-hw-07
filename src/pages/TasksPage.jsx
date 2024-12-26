@@ -1,66 +1,150 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchTasks, addTask, deleteTask, updateTask } from "../api/tasks";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+  updateContact,
+} from "../api/contacts";
+import toast from "react-hot-toast"; // React Hot Toast dla powiadomień
 
 const TasksPage = () => {
-  const [tasks, setTasks] = useState([]);
-  const navigate = useNavigate();
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newContact, setNewContact] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  }); // Nowy kontakt
 
+  // Załaduj kontakty po pierwszym renderze
   useEffect(() => {
-    const loadTasks = async () => {
-      const tasks = await fetchTasks();
-      setTasks(tasks);
-    };
-    loadTasks();
-  }, []);
-
-  const handleAddTask = async (newTask) => {
-    try {
-      const addedTask = await addTask(newTask);
-      setTasks([...tasks, addedTask]);
-      toast.success("Task added");
-    } catch (error) {
-      toast.error("Failed to add task");
-    }
-  };
-
-  const handleDeleteTask = async (taskId) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
+    const loadContacts = async () => {
       try {
-        await deleteTask(taskId);
-        setTasks(tasks.filter((task) => task.id !== taskId));
-        toast.success("Task deleted");
+        const data = await fetchContacts();
+        setContacts(data); // Ustawienie danych kontaktów
       } catch (error) {
-        toast.error("Failed to delete task");
+        toast.error("Failed to load contacts");
+      } finally {
+        setLoading(false);
       }
+    };
+
+    loadContacts();
+  }, []); // Pusty array oznacza, że załadowanie będzie tylko raz, po załadowaniu komponentu
+
+  // Dodaj nowy kontakt
+  const handleAddContact = async (e) => {
+    e.preventDefault(); // Zapobiega domyślnej akcji formularza
+
+    try {
+      const addedContact = await addContact(newContact); // Dodanie kontaktu do backendu
+      setContacts((prevContacts) => [...prevContacts, addedContact]); // Aktualizacja stanu kontaktów
+      toast.success("Contact added");
+      setNewContact({ name: "", email: "", phone: "" }); // Reset formularza
+    } catch (error) {
+      toast.error("Failed to add contact");
     }
   };
 
-  const handleToggleTaskCompletion = async (taskId) => {
+  // Usuń kontakt
+  const handleDeleteContact = async (contactId) => {
     try {
-      const updatedTask = await updateTask(taskId, { completed: true });
-      setTasks(tasks.map((task) => (task.id === taskId ? updatedTask : task)));
-      toast.success("Task marked as completed");
+      await deleteContact(contactId); // Usunięcie kontaktu
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== contactId)
+      ); // Usunięcie z UI
+      toast.success("Contact deleted");
     } catch (error) {
-      toast.error("Failed to update task");
+      toast.error("Failed to delete contact");
     }
+  };
+
+  // Edytuj kontakt
+  const handleUpdateContact = async (contactId, updatedData) => {
+    try {
+      const updatedContact = await updateContact(contactId, updatedData); // Aktualizacja kontaktu
+      setContacts((prevContacts) =>
+        prevContacts.map((contact) =>
+          contact.id === contactId ? updatedContact : contact
+        )
+      );
+      toast.success("Contact updated");
+    } catch (error) {
+      toast.error("Failed to update contact");
+    }
+  };
+
+  // Formularz dla nowego kontaktu
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewContact((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   return (
     <div>
-      <h1>Tasks Manager</h1>
-      {/* Formularz dodawania zadania */}
-      {/* Lista zadań */}
-      {tasks.map((task) => (
-        <div key={task.id}>
-          <span>{task.title}</span>
-          <button onClick={() => handleToggleTaskCompletion(task.id)}>
-            Mark as Completed
-          </button>
-          <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
-        </div>
-      ))}
+      <h1>Contacts</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {contacts.map((contact) => (
+            <li key={contact.id}>
+              <span>{contact.name}</span>
+              <span>{contact.email}</span>
+              <span>{contact.phone}</span>
+              <button
+                onClick={() =>
+                  handleUpdateContact(contact.id, { name: "Updated Name" })
+                }
+              >
+                Update
+              </button>
+              <button onClick={() => handleDeleteContact(contact.id)}>
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Formularz dodawania nowego kontaktu */}
+      <form onSubmit={handleAddContact}>
+        <h2>Add a new contact</h2>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={newContact.name}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={newContact.email}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+        <label>
+          Phone:
+          <input
+            type="text"
+            name="phone"
+            value={newContact.phone}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+        <button type="submit">Add Contact</button>
+      </form>
     </div>
   );
 };
